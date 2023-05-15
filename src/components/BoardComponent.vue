@@ -49,6 +49,11 @@
         });
     },
     methods: {
+        vibrate() {
+            if ('vibrate' in navigator) {
+            navigator.vibrate([200, 100, 200]); // Modèle de vibration : vibration pendant 200 ms, pause de 100 ms, vibration pendant 200 ms
+            }
+        },
         showNotification(body, registration) {
             const title = "TicTacToe";
 
@@ -110,7 +115,7 @@
                 registration.showNotification(title, options);
                 this.speakResult(winner);
             });
-            navigator.vibrate(500);
+            this.vibrate();
         } else if (this.isTie) {
             const title = 'Tic-Tac-Toe';
             const options = {
@@ -120,8 +125,9 @@
                 registration.showNotification(title, options);  
                 this.speakResult('tie');
             });
-            navigator.vibrate(200);
+            this.vibrate();
         } else {
+            this.vibrate();
             this.currentPlayerIndex = 1 - this.currentPlayerIndex
         }
         console.log(row, col)
