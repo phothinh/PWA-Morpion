@@ -9,7 +9,7 @@
             ],
             player:['Player X', 'Player O'],
             currentPlayerIndex: 0,
-            deferredPrompt: null
+            deferredPrompt: null,
         }
     },
     computed: {
@@ -49,33 +49,29 @@
         });
     },
     methods: {
-        async sendNotification() {
-            const notification = document.querySelector("#notification");
-            const registration = await navigator.serviceWorker.getRegistration();
-
-            if (Notification.permission === "granted") {
-                this.showNotification(notification.value, registration);
-            } else {
-                if (Notification.permission !== "denied") {
-                const permission = await Notification.requestPermission();
-
-                if (permission === "granted") {
-                    this.showNotification(notification.value, registration);
-                }
-                }
-            }
-            },
-            showNotification(body, registration) {
-            const title = "What PWA Can Do Today";
+        showNotification(body, registration) {
+            const title = "TicTacToe";
 
             const payload = {
                 body,
             };
 
-            if ("showNotification" in registration) {
-                registration.showNotification(title, payload);
-            } else {
-                new Notification(title, payload);
+            if (Notification.permission === "granted") {
+                if ("showNotification" in registration) {
+                    registration.showNotification(title, payload);
+                } else {
+                    new Notification(title, payload);
+                }
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        if ("showNotification" in registration) {
+                        registration.showNotification(title, payload);
+                        } else {
+                        new Notification(title, payload);
+                        }
+                    }
+                });
             }
         },
         speakResult(result) {
@@ -109,22 +105,20 @@
             const title = 'Tic-Tac-Toe';
             const options = {
                 body: winner + ' wins!',
-                icon: '/path/to/icon.png'
             };
-            navigator.serviceWorker.ready.then(function(registration) {
+            navigator.serviceWorker.ready.then((registration) => {
                 registration.showNotification(title, options);
-                this.sendNotification();
+                //this.sendNotification();
                 this.speakResult(winner);
             });
         } else if (this.isTie) {
             const title = 'Tic-Tac-Toe';
             const options = {
                 body: 'It\'s a tie!',
-                icon: '/path/to/icon.png'
             };
-            navigator.serviceWorker.ready.then(function(registration) {
+            navigator.serviceWorker.ready.then((registration) => {
                 registration.showNotification(title, options);
-                this.sendNotification();
+                //this.sendNotification();
                 this.speakResult('tie');
             });
         } else {
