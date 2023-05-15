@@ -108,19 +108,19 @@
             };
             navigator.serviceWorker.ready.then((registration) => {
                 registration.showNotification(title, options);
-                //this.sendNotification();
                 this.speakResult(winner);
             });
+            navigator.vibrate(500);
         } else if (this.isTie) {
             const title = 'Tic-Tac-Toe';
             const options = {
                 body: 'It\'s a tie!',
             };
             navigator.serviceWorker.ready.then((registration) => {
-                registration.showNotification(title, options);
-                //this.sendNotification();
+                registration.showNotification(title, options);  
                 this.speakResult('tie');
             });
+            navigator.vibrate(200);
         } else {
             this.currentPlayerIndex = 1 - this.currentPlayerIndex
         }
